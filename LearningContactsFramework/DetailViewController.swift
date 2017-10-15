@@ -7,17 +7,44 @@
 //
 
 import UIKit
+import Contacts
 
 class DetailViewController: UIViewController {
 
-    @IBOutlet weak var detailDescriptionLabel: UILabel!
-
-
+    @IBOutlet weak var contactImageView: UIImageView!
+    @IBOutlet weak var contactNameLabel: UILabel!
+    @IBOutlet weak var contactPhoneNumberLabel: UILabel!
+    
+    var contact: CNContact? {
+        didSet {
+            // Update the view.
+            self.configureView()
+        }
+    }
+    
     func configureView() {
-        // Update the user interface for the detail item.
-        if let detail = detailItem {
-            if let label = detailDescriptionLabel {
-                label.text = detail.description
+        // Update the user interface for the contact item.
+        if let contact = self.contact {
+            if let label = self.contactNameLabel {
+                label.text = CNContactFormatter.string(from: contact, style: .fullName)
+            }
+            
+            if let imageView = self.contactImageView {
+                if contact.imageData != nil {
+                    imageView.image = UIImage(data: contact.imageData!)
+                }
+                else {
+                    imageView.image = nil
+                }
+            }
+            
+            if let phoneNumberLabel = self.contactPhoneNumberLabel {
+                var numberArray = [String]()
+                for number in contact.phoneNumbers {
+                    let phoneNumber = number.value
+                    numberArray.append(phoneNumber.stringValue)
+                }
+                phoneNumberLabel.text = numberArray.joined(separator: ", ")
             }
         }
     }
@@ -28,18 +55,4 @@ class DetailViewController: UIViewController {
         configureView()
     }
 
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
-    }
-
-    var detailItem: NSDate? {
-        didSet {
-            // Update the view.
-            configureView()
-        }
-    }
-
-
 }
-
