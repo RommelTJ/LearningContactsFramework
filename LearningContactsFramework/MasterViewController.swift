@@ -15,7 +15,6 @@ class MasterViewController: UITableViewController, CNContactPickerDelegate {
     var detailViewController: DetailViewController? = nil
     var contacts = [CNContact]()
 
-
     override func viewDidLoad() {
         super.viewDidLoad()
         
